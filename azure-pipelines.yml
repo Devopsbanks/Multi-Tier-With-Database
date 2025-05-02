@@ -41,3 +41,22 @@ stages:
             mavenAuthenticateFeed: false
             effectivePomSkip: false
             sonarQubeRunAnalysis: false
+  
+  - stage: sonarQube
+    displayName: 'Sonar Qube Analysis'
+    jobs:
+      - job: SonarQube_analysis
+        steps: 
+        - task: SonarQubePrepare@7
+          inputs:
+            SonarQube: 'sonar-sc'
+            scannerMode: 'cli'
+            configMode: 'manual'
+            cliProjectKey: 'anyname'
+            cliProjectName: 'anyname'
+            cliSources: '.'
+            extraProperties: 'sonar.java.binaries=.'
+        
+        - task: SonarQubeAnalyze@7
+          inputs:
+            jdkversion: 'JAVA_HOME_17_X64'
