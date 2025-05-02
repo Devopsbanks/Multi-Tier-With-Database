@@ -49,7 +49,7 @@ stages:
         steps: 
         - task: SonarQubePrepare@7
           inputs:
-            SonarQube: 'sonar-sc'
+            SonarQube: 'sonarQube-sc'
             scannerMode: 'cli'
             configMode: 'manual'
             cliProjectKey: 'anyname'
