@@ -3,7 +3,8 @@ trigger:
 
 pool:
   name: agent-pool-sh
-  demands: Agent.Name -equals agent-sh
+  demands: 
+    - maven
 
 stages:
   - stage: compile 
