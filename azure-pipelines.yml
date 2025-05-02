@@ -49,13 +49,14 @@ stages:
         steps: 
         - task: SonarQubePrepare@7
           inputs:
-            SonarQube: 'sonarQube-sc'
-            scannerMode: 'cli'
-            configMode: 'manual'
-            cliProjectKey: 'anyname'
-            cliProjectName: 'anyname'
-            cliSources: '.'
-            extraProperties: 'sonar.java.binaries=.'
+            SonarQube: 'sonar-sc'
+            scannerMode: 'other'
+            extraProperties: |
+              # Additional properties that will be passed to the scanner,
+              # Put one key=value per line, example:
+              # sonar.exclusions=**/*.bin
+              sonar.projectKey=sonaqubeproject
+              sonar.projectName=sonaqubeproject
         
         - task: SonarQubeAnalyze@7
           inputs:
