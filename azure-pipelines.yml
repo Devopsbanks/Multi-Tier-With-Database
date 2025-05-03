@@ -42,4 +42,21 @@ stages:
             effectivePomSkip: false
             sonarQubeRunAnalysis: false
   
-  
+  - stage: SonarQube
+    displayName: Sonar_Test
+    jobs:
+      - job: SonarQube
+        steps:
+        - task: SonarQubePrepare@7
+          inputs:
+            SonarQube: 'sonar-sc'
+            scannerMode: 'cli'
+            configMode: 'manual'
+            cliProjectKey: 'Multi-Tier-With-Database-p_Multi-Tier-With-Database-p_432df0bf-903d-4be1-be34-8462ad438f4c'
+            cliProjectName: 'Multi-Tier-With-Database-p'
+            cliSources: '.'
+            extraProperties: 'sonar.java.binaries=.'
+      
+        - task: SonarQubeAnalyze@7
+          inputs:
+            jdkversion: 'JAVA_HOME_17_X64'
