@@ -55,7 +55,7 @@ stages:
             cliProjectKey: 'Multi-Tier-With-Database-p_Multi-Tier-With-Database-p_432df0bf-903d-4be1-be34-8462ad438f4c'
             cliProjectName: 'Multi-Tier-With-Database-p'
             cliSources: '.'
-            extraProperties: 'sonar.java.binaries=.'
+            extraProperties: 'sonar.java.binaries=target/classes'
       
         - task: SonarQubeAnalyze@7
           inputs:
