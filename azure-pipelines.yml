@@ -7,7 +7,7 @@ pool:
     - maven
 
 stages:
-  - stage: compile 
+  - stage: maven_compile 
     displayName: 'maven compile'
     jobs:
       - job: maven_compile
@@ -24,7 +24,7 @@ stages:
             mavenAuthenticateFeed: false
             effectivePomSkip: false
             sonarQubeRunAnalysis: false
-  - stage: test
+  - stage: JUnit_Test
     displayName: 'Maven test'
     jobs:
       - job: 'unit_test'
@@ -67,12 +67,15 @@ stages:
         - task: SonarQubeAnalyze@7
           inputs:
             jdkversion: 'JAVA_HOME_17_X64'
-  - stage: Publish_artifact
-    displayName: Publish_artifact
+  - stage: Publish_build_artifact
+    displayName: Publish_build_artifact
     jobs:
-      - job: Publish_artifact
-        displayName: Publish_artifact
+      - job: Publish_build_artifact
+        displayName: Publish_build_artifact
         steps:
+        - task: MavenAuthenticate@0
+          inputs:
+            artifactsFeeds: 'artifact-feed'
         - task: Maven@4
           inputs:
             azureSubscription: 'azure-sc'
@@ -85,6 +88,52 @@ stages:
             mavenAuthenticateFeed: false
             effectivePomSkip: false
             sonarQubeRunAnalysis: false
-        - task: MavenAuthenticate@0
+  - stage: docker_build
+    displayName: docker_build
+    jobs:
+      - job: docker_build
+        steps:
+        - task: CmdLine@2
           inputs:
-            artifactsFeeds: 'artifact-feed'
+            script: 'mvn package'
+        - task: Docker@2
+          inputs:
+            containerRegistry: 'acr-sc'
+            repository: 'dev'
+            command: 'build'
+            Dockerfile: '**/Dockerfile'
+            tags: 'latest'
+  - stage: trivy_image_scan
+    displayName: trivy_image_scan
+    jobs:
+      - job: trivy_image_scan
+        displayName: trivy_image_scan
+        steps:
+        - task: CmdLine@2
+          inputs:
+            script: 'trivy fs --format table -o image.html acr1122.azurecr.io/dev:latest'
+  
+  - stage: docker_image_publish_to_acr
+    displayName: docker_image_publish_to_acr
+    jobs:
+      - job: docker_image_publish_to_acr
+        steps:
+        - task: Docker@2
+          inputs:
+            containerRegistry: 'acr-sc'
+            repository: 'dev'
+            command: 'push'
+            tags: 'latest'
+  
+  - stage: Deploy_to_aks
+    displayName: Deploy_to_aks
+    jobs:
+      - job: Deploy_to_aks
+        steps:
+        - task: KubernetesManifest@1
+          inputs:
+            action: 'deploy'
+            connectionType: 'kubernetesServiceConnection'
+            kubernetesServiceConnection: 'k8-sc'
+            namespace: 'default'
+            manifests: 'ds.yaml'
