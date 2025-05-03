@@ -113,7 +113,7 @@ stages:
         steps:
         - task: CmdLine@2
           inputs:
-            script: 'trivy fs --format table -o image.html acr1122.azurecr.io/dev:latest'
+            script: 'trivy image --format table -o image.html acr1122.azurecr.io/dev:latest'
   
   - stage: docker_image_publish_to_acr
     displayName: docker_image_publish_to_acr
