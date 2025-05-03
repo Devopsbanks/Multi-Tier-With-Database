@@ -67,3 +67,24 @@ stages:
         - task: SonarQubeAnalyze@7
           inputs:
             jdkversion: 'JAVA_HOME_17_X64'
+  - stage: Publish_artifact
+    displayName: Publish_artifact
+    jobs:
+      - job: Publish_artifact
+        displayName: Publish_artifact
+        steps:
+        - task: Maven@4
+          inputs:
+            azureSubscription: 'azure-sc'
+            mavenPomFile: 'pom.xml'
+            goals: 'deploy'
+            publishJUnitResults: true
+            testResultsFiles: '**/surefire-reports/TEST-*.xml'
+            javaHomeOption: 'JDKVersion'
+            mavenVersionOption: 'Default'
+            mavenAuthenticateFeed: false
+            effectivePomSkip: false
+            sonarQubeRunAnalysis: false
+        - task: MavenAuthenticate@0
+          inputs:
+            artifactsFeeds: 'artifact-feed'
