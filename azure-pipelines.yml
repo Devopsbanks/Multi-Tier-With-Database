@@ -42,22 +42,4 @@ stages:
             effectivePomSkip: false
             sonarQubeRunAnalysis: false
   
-  - stage: sonarQube
-    displayName: 'Sonar Qube Analysis'
-    jobs:
-      - job: SonarQube_analysis
-        steps: 
-        - task: SonarQubePrepare@7
-          inputs:
-            SonarQube: 'sonar-sc'
-            scannerMode: 'other'
-            extraProperties: |
-              # Additional properties that will be passed to the scanner,
-              # Put one key=value per line, example:
-              # sonar.exclusions=**/*.bin
-              sonar.projectKey=sonaqubeproject
-              sonar.projectName=sonaqubeproject
-        
-        - task: SonarQubeAnalyze@7
-          inputs:
-            jdkversion: 'JAVA_HOME_17_X64'
+  
