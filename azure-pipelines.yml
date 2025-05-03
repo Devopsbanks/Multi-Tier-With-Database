@@ -49,7 +49,7 @@ stages:
         steps:
         - task: SonarQubePrepare@7
           inputs:
-            SonarQube: 'sonar-sc'
+            SonarQube: 'sonar-sc1'
             scannerMode: 'cli'
             configMode: 'manual'
             cliProjectKey: 'Multi-Tier-With-Database-p_Multi-Tier-With-Database-p_432df0bf-903d-4be1-be34-8462ad438f4c'
