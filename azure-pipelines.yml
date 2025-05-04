@@ -50,25 +50,44 @@ stages:
           inputs:
             script: 'trivy fs --format table -o fs.html .'
  
-#  - stage: SonarQube
-#   displayName: Sonar_Test
-#    jobs:
-#      - job: SonarQube
-#        steps:
-#        - task: SonarQubePrepare@7
-#          inputs:
-#            SonarQube: 'sonar-sc1'
-#            scannerMode: 'cli'
-#            configMode: 'manual'
-#            cliProjectKey: 'Multi-Tier-With-Database-p_Multi-Tier-With-Database-p_432df0bf-903d-4be1-be34-8462ad438f4c'
-#            cliProjectName: 'Multi-Tier-With-Database-p'
-#            cliSources: '.'
-#            extraProperties: 'sonar.java.binaries=target/classes'
-#      
-#        - task: SonarQubeAnalyze@7
-#          inputs:
-#            jdkversion: 'JAVA_HOME_17_X64'
-            
+  - stage: sonar_analysis
+    displayName: sonar_analysis
+    jobs:
+      - job: sonar_analysis
+        steps:
+        - task: SonarQubePrepare@7
+          inputs:
+            SonarQube: 'sonar-svc99'
+            scannerMode: 'other'
+            extraProperties: |
+              # Additional properties that will be passed to the scanner,
+              # Put one key=value per line, example:
+              # sonar.exclusions=**/*.bin
+              sonar.projectKey=Multi-Tier-With-Database-p_Multi-Tier-With-Database-p_AZaZrEmkGmit7bDMTcx_
+
+        - task: JavaToolInstaller@1
+          inputs:
+            versionSpec: '21'
+            jdkArchitectureOption: 'x64'
+            jdkSourceOption: 'PreInstalled'
+        
+        - task: Maven@4
+          inputs:
+            azureSubscription: 'azure-sc'
+            mavenPomFile: 'pom.xml'
+            publishJUnitResults: true
+            testResultsFiles: '**/surefire-reports/TEST-*.xml'
+            javaHomeOption: 'JDKVersion'
+            mavenVersionOption: 'Default'
+            mavenAuthenticateFeed: false
+            effectivePomSkip: false
+            sonarQubeRunAnalysis: true
+            sqMavenPluginVersionChoice: 'latest'
+        
+        - task: SonarQubePublish@7
+          inputs:
+            pollingTimeoutSec: '300'
+        
   - stage: Publish_build_artifact
     displayName: Publish_build_artifact
     jobs:
