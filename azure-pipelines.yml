@@ -91,3 +91,26 @@ stages:
         - task: SonarQubePublish@7
           inputs:
             pollingTimeoutSec: '300'
+  
+  - stage: publish_artifact
+    displayName: publish_artifact
+    jobs:
+      - job: publish_artifact
+        steps:
+        - task: MavenAuthenticate@0
+          inputs:
+            artifactsFeeds: 'afticat-feed4'
+        - task: Maven@4
+          inputs:
+            azureSubscription: 'azure-sc'
+            mavenPomFile: 'pom.xml'
+            goals: 'publish'
+            publishJUnitResults: true
+            testResultsFiles: '**/surefire-reports/TEST-*.xml'
+            javaHomeOption: 'JDKVersion'
+            mavenVersionOption: 'Default'
+            mavenAuthenticateFeed: false
+            effectivePomSkip: false
+            sonarQubeRunAnalysis: false
+
+ 
