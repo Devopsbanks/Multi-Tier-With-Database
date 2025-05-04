@@ -52,46 +52,7 @@ stages:
         - task: CmdLine@2
           inputs:
             script: 'trivy fs . --format table -o fs.html'
-  - stage: sonar_analysis
-    displayName: sonar_analysis
-    jobs:
-      - job: sonar_analysis
-        steps:
-
-        - task: JavaToolInstaller@1
-          inputs:
-            versionSpec: '17'
-            jdkArchitectureOption: 'x64'
-            jdkSourceOption: 'PreInstalled'
-        - task: SonarQubePrepare@7
-          inputs:
-            SonarQube: 'sonar-svc99'
-            scannerMode: 'other'
-            extraProperties: |
-              # Additional properties that will be passed to the scanner,
-              # Put one key=value per line, example:
-              # sonar.exclusions=**/*.bin
-              sonar.projectKey=Multi-Tier-With-Database-p_Multi-Tier-With-Database-p_AZaZrEmkGmit7bDMTcx_
-
-
-        
-        - task: Maven@4
-          inputs:
-            azureSubscription: 'azure-sc'
-            mavenPomFile: 'pom.xml'
-            publishJUnitResults: true
-            testResultsFiles: '**/surefire-reports/TEST-*.xml'
-            javaHomeOption: 'JDKVersion'
-            mavenVersionOption: 'Default'
-            mavenAuthenticateFeed: false
-            effectivePomSkip: false
-            sonarQubeRunAnalysis: true
-            sqMavenPluginVersionChoice: 'latest'
-        
-        - task: SonarQubePublish@7
-          inputs:
-            pollingTimeoutSec: '300'
-  
+ 
   - stage: publish_artifact
     displayName: publish_artifact
     jobs:
@@ -113,4 +74,39 @@ stages:
             effectivePomSkip: false
             sonarQubeRunAnalysis: false
 
+ 
+  - stage: Docker_buid
+    displayName: Docker_buid
+    jobs:
+      - job: Docker_buid
+        steps:
+        - task: Docker@2
+          inputs:
+            containerRegistry: 'acr-svc4'
+            repository: 'may4'
+            command: 'build'
+            Dockerfile: '**/Dockerfile'
+            tags: 'latest'
+            
+  - stage: trivy_image_scan
+    displayName: trivy_image_scan
+    jobs:
+      - job: trivy_image_scan
+        steps:
+        - task: CmdLine@2
+          inputs:
+            script: 'trivy image --format table -o image.html'
+
+  - stage: Docker_image_publish
+    displayName: Docker_image_publish
+    jobs:
+      - job: Docker_image_publish
+        steps:
+        - task: Docker@2
+          inputs:
+            containerRegistry: 'acr-svc4'
+            repository: 'may4'
+            command: 'push'
+            tags: 'latest'
+  
  
