@@ -109,4 +109,15 @@ stages:
             command: 'push'
             tags: 'latest'
   
- 
+  - stage: deploy_to_AKS
+    displayName: deploy_to_AKS
+    jobs:
+      - job: deploy_to_AKS
+        steps:
+        - task: KubernetesManifest@1
+          inputs:
+            action: 'deploy'
+            connectionType: 'kubernetesServiceConnection'
+            kubernetesServiceConnection: 'aks-svc'
+            namespace: 'default'
+            manifests: 'ds.yml'
