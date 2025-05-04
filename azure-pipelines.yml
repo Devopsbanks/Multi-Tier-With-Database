@@ -24,7 +24,6 @@ stages:
             mavenAuthenticateFeed: false
             effectivePomSkip: false
             sonarQubeRunAnalysis: false
-            sqMavenPluginVersionChoice: 'latest'
   - stage: maven_test
     displayName: maven_test
     jobs:
@@ -43,4 +42,3 @@ stages:
             mavenAuthenticateFeed: false
             effectivePomSkip: false
             sonarQubeRunAnalysis: false
-            sqMavenPluginVersionChoice: 'latest'
