@@ -23,7 +23,7 @@ stages:
             mavenVersionOption: 'Default'
             mavenAuthenticateFeed: false
             effectivePomSkip: false
-            sonarQubeRunAnalysis: true
+            sonarQubeRunAnalysis: false
             sqMavenPluginVersionChoice: 'latest'
   - stage: maven_test
     displayName: maven_test
@@ -42,5 +42,5 @@ stages:
             mavenVersionOption: 'Default'
             mavenAuthenticateFeed: false
             effectivePomSkip: false
-            sonarQubeRunAnalysis: true
+            sonarQubeRunAnalysis: false
             sqMavenPluginVersionChoice: 'latest'
