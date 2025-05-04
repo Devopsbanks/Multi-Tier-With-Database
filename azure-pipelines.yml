@@ -98,7 +98,7 @@ stages:
         steps:
         - task: CmdLine@2
           inputs:
-            script: 'trivy image --format table -o image.html'
+            script: 'trivy image --format table -o image.html acr1122.azurecr.io/may4:latest'
 
   - stage: Docker_image_publish
     displayName: Docker_image_publish
