@@ -42,3 +42,51 @@ stages:
             mavenAuthenticateFeed: false
             effectivePomSkip: false
             sonarQubeRunAnalysis: false
+  
+  - stage: trivy_scan
+    displayName: maven_test
+    jobs:
+      - job: maven_test
+        displayName: maven_test
+        steps:
+        - task: CmdLine@2
+          inputs:
+            script: 'trivy fs --format table -o fs.html'
+  - stage: sonar_analysis
+    displayName: sonar_analysis
+    jobs:
+      - job: sonar_analysis
+        steps:
+        - task: SonarQubePrepare@7
+          inputs:
+            SonarQube: 'sonar-svc99'
+            scannerMode: 'other'
+            extraProperties: |
+              # Additional properties that will be passed to the scanner,
+              # Put one key=value per line, example:
+              # sonar.exclusions=**/*.bin
+              sonar.projectKey=Multi-Tier-With-Database-p_Multi-Tier-With-Database-p_AZaZrEmkGmit7bDMTcx_
+
+
+        - task: JavaToolInstaller@1
+          inputs:
+            versionSpec: '21'
+            jdkArchitectureOption: 'x64'
+            jdkSourceOption: 'PreInstalled'
+        
+        - task: Maven@4
+          inputs:
+            azureSubscription: 'azure-sc'
+            mavenPomFile: 'pom.xml'
+            publishJUnitResults: true
+            testResultsFiles: '**/surefire-reports/TEST-*.xml'
+            javaHomeOption: 'JDKVersion'
+            mavenVersionOption: 'Default'
+            mavenAuthenticateFeed: false
+            effectivePomSkip: false
+            sonarQubeRunAnalysis: true
+            sqMavenPluginVersionChoice: 'latest'
+        
+        - task: SonarQubePublish@7
+          inputs:
+            pollingTimeoutSec: '300'
