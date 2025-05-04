@@ -80,6 +80,9 @@ stages:
     jobs:
       - job: Docker_buid
         steps:
+        - task: CmdLine@2
+          inputs:
+            script: 'mvn package'
         - task: Docker@2
           inputs:
             containerRegistry: 'acr-svc4'
