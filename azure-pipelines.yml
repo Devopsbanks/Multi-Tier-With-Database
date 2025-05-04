@@ -44,14 +44,14 @@ stages:
             sonarQubeRunAnalysis: false
   
   - stage: trivy_scan
-    displayName: maven_test
+    displayName: trivy_test
     jobs:
-      - job: maven_test
-        displayName: maven_test
+      - job: trivy_test
+        displayName: trivy_test
         steps:
         - task: CmdLine@2
           inputs:
-            script: 'trivy fs --format table -o fs.html'
+            script: 'trivy fs . --format table -o fs.html'
   - stage: sonar_analysis
     displayName: sonar_analysis
     jobs:
