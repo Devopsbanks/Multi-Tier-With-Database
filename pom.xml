@@ -111,15 +111,15 @@
 
 		 <distributionManagement>
 		<repository>
-		<id>artifact-feed</id>
-		<url>https://pkgs.dev.azure.com/microservicesjporg/Multi-Tier-With-Database-p/_packaging/artifact-feed/maven/v1</url>
-		<releases>
-			<enabled>true</enabled>
-		</releases>
-		<snapshots>
-			<enabled>true</enabled>
-		</snapshots>
-		</repository>
+  <id>afticat-feed4</id>
+  <url>https://pkgs.dev.azure.com/microservicesjporg/Multi-Tier-With-Database-p/_packaging/afticat-feed4/maven/v1</url>
+  <releases>
+    <enabled>true</enabled>
+  </releases>
+  <snapshots>
+    <enabled>true</enabled>
+  </snapshots>
+</repository>
 
 		 </distributionManagement>
 
